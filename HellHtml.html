@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<head> </head>
+<body>
+  <div>
+    <!-- Mustache语法，用于数据绑定 -->
+    <div id="example">
+      <p>Original message: "{{message}}"</p>
+      <p>Computed reversed message: "{{reversedMessage}}"</p>
+    </div>
+
+    <!-- v-once ，一次性地插值，当数据改变时，插值处的内容不会更新 -->
+    <div>
+      <span v-once>这个将不会改变: {{ msg }}</span>
+    </div>
+
+    <!-- v-html, 双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的
+    HTML，你需要使用 v-html 指令 -->
+    <div>
+      <p>Using mustaches: {{ rawHtml }}</p>
+      <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+    </div>
+
+    <!-- v-bind语法，用于绑定attribute -->
+    <div>
+      <div v-bind:id="dynamicId" />
+      <button v-bind:disabled="isButtonDisabled">Button</button>
+
+      <!-- 缩写 -->
+      <div>
+        <!-- 完整语法 -->
+        <a v-bind:href="url">...</a>
+
+        <!-- 缩写 -->
+        <a :href="url">...</a>
+
+        <!-- 动态参数的缩写 (2.6.0+) -->
+        <a :[key]="url"> ... </a>
+      </div>
+    </div>
+
+    <!-- JavaScript 表达式 -->
+    <!-- JavaScript 表达式, 对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript
+    表达式支持。 -->
+    <!-- 这些表达式会在所属 Vue 实例的数据作用域下作为
+    JavaScript
+    被解析。有个限制就是，每个绑定都只能包含单个表达式，类似if语句等不会生效。 -->
+    <div>
+      <p>{{ number + 1 }}</p>
+      <p>{{ ok ? 'YES' : 'NO' }}</p>
+      <p>{{ message.split('').reverse().join('') }}</p>
+      <div v-bind:id="'list-' + id"></div>
+    </div>
+  </div>
+
+  <script>
+    var vm = new Vue({
+      //元素属性
+      el: "#example",
+      data: {
+        //这里放 数据绑定 的变量
+        message: "Hello VueJS",
+        question: "",
+      },
+      method: {
+        //这里放方法，注意不要用箭头函数（this的缘故）
+        click_button: function () {},
+      },
+      //Vue周期的方法，
+      created: function () {
+        //生命周期内的方法,this 都指向Vue本身实例
+      },
+      mounted: function () {
+        //mounted
+      },
+      computed: {
+        //计算属性，默认是Get
+        reversedMessage: function () {
+          // `this` 指向 vm 实例
+          return this.message.split("").reverse().join("");
+        },
+        // 计算属性，完整的get、set方法
+        fullName: {
+          // getter
+          get: function () {
+            return this.firstName + " " + this.lastName;
+          },
+          // setter
+          set: function (newValue) {
+            var names = newValue.split(" ");
+            this.firstName = names[0];
+            this.lastName = names[names.length - 1];
+          },
+        },
+      },
+      //侦听器
+      watch: {
+        // 如果 `question` 发生改变，这个函数就会运行
+        question: function (newQuestion, oldQuestion) {
+          this.answer = "Waiting for you to stop typing...";
+          this.debouncedGetAnswer();
+        },
+      },
+    });
+
+    //组件
+    var component = new Vue.component('component-name',{
+      //数据，组件内的数据绑定必须通过函数形式，不能直接定义一个对象
+      data: function(){
+        return {
+          count: 0
+        }
+      },
+      //调用方通过props，把属性传递给组件
+      props: ['post'],
+      //组件模板
+      template: '<div>{{ count }}<div>'
+    });
+
+  </script>
+</body>
